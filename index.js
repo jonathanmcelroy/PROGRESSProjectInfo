@@ -17,13 +17,13 @@ function getVariables() {
 
 function testForAssignment(variable) {
   var contents = getContents();
-  var assignmentRegex = new RegExp("(" + variable + "\s*=)|(output\s+" + variable + ")", "gi");
+  var assignmentRegex = new RegExp("(" + variable + "\\s*=)|(output\\s+" + variable + ")", "gi");
   return (assignmentRegex.test(contents));
 }
 
 function testForUsage(variable) {
   var contents = getContents();
-  var usageRegex = new RegExp("(?!input\s+)" + variable + "(?!\s*=)", "gi");
+  var usageRegex = new RegExp("(?!input\\s+)" + variable + "(?!\\s*=)", "gi");
   return (usageRegex.test(contents));
 }
 
