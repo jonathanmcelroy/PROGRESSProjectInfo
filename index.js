@@ -10,7 +10,7 @@ function getVariables() {
   var vars = [];
   var result;
   while((result = varDefRegex.exec(contents)) !== null) {
-    vars.add(result[1]);
+    vars.push(result[1]);
   }
   return vars;
 }
