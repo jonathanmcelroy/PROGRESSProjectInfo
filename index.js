@@ -29,7 +29,7 @@ function testForUsage(variable) {
 
 function getAllUnusedOrUndefinedVariables() {
   var variables = getVariables();
-  for(int i=0; i<variables.length; i++) {
+  for(var i=0; i<variables.length; i++) {
     var variable = variables[i];
     if(!testForUsage(variable)) {
       console.log(variable + " not used");
