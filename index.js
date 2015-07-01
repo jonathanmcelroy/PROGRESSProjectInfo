@@ -23,7 +23,7 @@ function testForAssignment(variable) {
 
 function testForUsage(variable) {
   var contents = getContents();
-  var usageRegex = new RegExp("(?!input\\s+)" + variable + "(?!\\s*=)", "gi");
+  var usageRegex = new RegExp("(?!(input\\s+)|(define\\s+variable\\s+))" + variable + "(?!\\s*=)", "gi");
   return (usageRegex.test(contents));
 }
 
