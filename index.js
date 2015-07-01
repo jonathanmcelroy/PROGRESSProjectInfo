@@ -26,3 +26,15 @@ function testForUsage(variable) {
   var assignmentRegex = new RegExp("(=[^.]" + variable + ")|(input\s+" + variable + ")", "gi");
   return (assignmentRegex.test(contents));
 }
+
+function getAllUnusedOrUndefinedVariables() {
+  var variables = getVariables();
+  for(int i=0; i<variables.length; i++) {
+    var variable = variables[i];
+    if(!testForUsage(variable)) {
+      console.log(variable + " not used");
+    } else if(!testForAssignment(variable)) {
+      console.log(variable + " not defined");
+    }
+  }
+}
