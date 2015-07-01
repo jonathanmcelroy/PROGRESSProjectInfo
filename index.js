@@ -23,8 +23,8 @@ function testForAssignment(variable) {
 
 function testForUsage(variable) {
   var contents = getContents();
-  var assignmentRegex = new RegExp("(=[^.]" + variable + ")|(input\s+" + variable + ")", "gi");
-  return (assignmentRegex.test(contents));
+  var usageRegex = new RegExp("(?!input\s+)" + variable + "(?!\s*=)", "gi");
+  return (usageRegex.test(contents));
 }
 
 function getAllUnusedOrUndefinedVariables() {
