@@ -75,7 +75,7 @@ function getProcedureGraph() {
   var dict = {};
   for(var i=0; i<procedures.length; i++) {
     var procedure = procedures[i];
-    dict[procedure = [];
+    dict[procedure[0]] = [];
   }
   
   var calledProcedures = getProcedureCalls();
