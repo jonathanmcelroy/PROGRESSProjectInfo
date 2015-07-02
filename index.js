@@ -41,7 +41,7 @@ function getAllUnusedOrUndefinedVariables() {
 
 function getProcedureNamesAndIndices() {
   var contents = getContents();
-  var procedureStart = /procedure +([^ ]+) +[.:]/gi
+  var procedureStart = /procedure +([\w-]+) +[.:]/gi
   var procedureEnd   = /end procedure\./gi
   
   var vars = [];
@@ -52,44 +52,124 @@ function getProcedureNamesAndIndices() {
     procedureEnd.exec(contents);
     var endIndex = procedureEnd.lastIndex;
     
-    vars.push([result[1], startIndex, endIndex]);
+    vars.push({
+      name:   result[1],
+      start:  startIndex,
+      end:    endIndex
+    });
   }
   return vars;
 }
 
 function getProcedureCalls() {
   var contents = getContents();
-  var regex = /run +([^ ]+) +[.:]/gi
+  var regex = /run +([\w-]+)/gi
   
   var vars = [];
   var result;
   while((result = regex.exec(contents)) !== null) {
-    vars.push([result[1], regex.lastIndex]);
+    vars.push({
+      name: result[1],
+      index: regex.lastIndex
+    });
   }
   return vars;
 }
 
 function getProcedureGraph() {
   var contents = getContents();
-  var procedures = getProcedureNamesAndIndiced();
-  var dict = {};
+  var procedures = getProcedureNamesAndIndices();
+
+  var nodeDict = {}
+
+  var nodes = [];
   for(var i=0; i<procedures.length; i++) {
     var procedure = procedures[i];
-    dict[procedure[0]] = [];
+
+    var node = {
+      id:     procedure.name,
+      label:  procedure.name,
+      group:  'noInteraction'
+    };
+
+    nodeDict[procedure.name] = node;
+    nodes.push(node);
   }
   
+  // for each call to a procedure
   var calledProcedures = getProcedureCalls();
+
+  var edgeDict = {};
+  var edges = [];
+
   for(var i=0; i<calledProcedures.length; i++) {
     var calledProcedure = calledProcedures[i];
-    var calledName = calledProcedure[0];
-    var index = calledProcedure[1];
+    if(nodeDict[calledProcedure.name] === undefined) {
+      continue;
+    }
     
+    // for each procedure definition
     for(var j=0; j<procedures.length; j++) {
       var procedure = procedures[j];
-      if(procedure[1] < index && index < procedure[2]) {
-        dict[procedure[0]].push(calledName);
+
+      // if the called procedure is in the procedure definition
+      if(procedure.start < calledProcedure.index && calledProcedure.index < procedure.end) {
+        if (edgeDict[procedure.name] === undefined) {
+          edgeDict[procedure.name] = {};
+        }
+        if (edgeDict[procedure.name][calledProcedure.name] === undefined) {
+          edgeDict[procedure.name][calledProcedure.name] = true;
+          edges.push({
+            from:   procedure.name,
+            to:     calledProcedure.name,
+            arrows: 'to'
+          });
+
+          switch(nodeDict[procedure.name].group) {
+            case "noInteraction":
+              nodeDict[procedure.name].group = "isNotCalled";
+              break;
+            case "doesNotCall":
+              nodeDict[procedure.name].group = undefined;
+              break;
+          }
+          switch(nodeDict[calledProcedure.name].group) {
+            case "noInteraction":
+              nodeDict[calledProcedure.name].group = "doesNotCall";
+              break;
+            case "isNotCalled":
+              nodeDict[calledProcedure.name].group = undefined;
+              break;
+          }
+          break;
+        }
       }
     }
   }
-  return dict;
+
+  var container = document.getElementById("network");
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  var options = {
+    groups: {
+      isNotCalled: {
+        color: {
+          background: 'lime'
+        }
+      },
+      doesNotCall: {
+        color: {
+          background: 'yellow'
+        }
+      },
+      noInteraction: {
+        color: {
+          background: 'red'
+        }
+      }
+    }
+  }
+  var network = new vis.Network(container, data, options);
 }
