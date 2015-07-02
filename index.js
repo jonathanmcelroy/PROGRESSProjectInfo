@@ -41,7 +41,7 @@ function getAllUnusedOrUndefinedVariables() {
 
 function getProcedureNamesAndIndices() {
   var contents = getContents();
-  var procedureStart = /procedure +([\w-]+)/gi
+  var procedureStart = /procedure +([.\w-]+) +[:.]/gi
   var procedureEnd   = /end procedure\./gi
   
   var vars = [];
