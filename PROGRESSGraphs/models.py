@@ -6,7 +6,7 @@ class Node(models.Model):
         ("proc", "Procedure"),
         ("func", "Function"),
     )
-    name = models.CharField()
+    name = models.CharField(max_length = 200)
     progressType = models.CharField(max_length = 4,
                                     choices = TYPE_CHOICES)
     edges = models.ManyToManyField("self", through="Edge", symmetrical=False, related_name="Uses")
