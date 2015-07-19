@@ -11,6 +11,12 @@ class Node(models.Model):
                                     choices = TYPE_CHOICES)
     edges = models.ManyToManyField("self", through="Edge", symmetrical=False, related_name="Uses")
 
+    def __str__(self):
+        return self.name
+
 class Edge(models.Model):
     user = models.ForeignKey(Node, related_name="User")
     used = models.ForeignKey(Node, related_name="Used")
+
+    def __str__(self):
+        return "({} -> {})".format(str(self.user), str(self.used))
