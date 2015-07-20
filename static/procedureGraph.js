@@ -255,4 +255,4 @@ function showGraph(files) {
   reader.readAsText(files[0]);
 }
 
-dragDropWidget.createWidget("filedrag", showGraph);
+dragDropWidget.createWidget("filedrag", showGraph)
