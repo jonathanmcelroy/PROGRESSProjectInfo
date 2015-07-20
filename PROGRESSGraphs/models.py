@@ -15,8 +15,20 @@ class Node(models.Model):
         return self.name
 
 class Edge(models.Model):
+    '''
+    TYPE_CHOICES = (
+        ("call", "Call"),
+        ("sobj", "Smart Object Creation")
+    )
+    '''
+
     user = models.ForeignKey(Node, related_name="User")
     used = models.ForeignKey(Node, related_name="Used")
+
+    '''
+    edgeType = models.CharField(max_length = 4,
+                                choices = TYPE_CHOICES)
+    '''
 
     def __str__(self):
         return "({} -> {})".format(str(self.user), str(self.used))
