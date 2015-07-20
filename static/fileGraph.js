@@ -58,82 +58,36 @@ function createEdges(contents, procedures, nodeDict) {
   return edges;
 }
 
-function showGraph(files) {
-  var file;
-  for(var fileI=0; file = files[fileI]; fileI++) {
-    console.log(file);
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      /*
-      var contents = e.target.result;
-      var fileFiles = progress.getFileDependancies(contents);
-
-      var nodeDict = {};
-      var nodes = [];
-      for(var i=0; i<procedures.length; i++) {
-        var procedure = procedures[i];
-
-        var node = {
-          id:     procedure.name,
-          label:  procedure.name,
-          group:  'noInteraction'
-        };
-
-        nodeDict[procedure.name] = node;
-        nodes.push(node);
+function getGraph() {
+  document.getElementById("network").innerHTML = "Getting graph"
+  var request = new XMLHttpRequest()
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      if (request.status == 200) {
+        showGraph(request.responseText)
       }
-
-      var edges = createEdges(contents, procedures, nodeDict);
-
-      var container = document.getElementById("network");
-      var data = {
-        nodes: nodes,
-        edges: edges
-      };
-      var options = {
-        nodes: {
-          shape: 'dot',
-          size: 10
-        },
-        groups: {
-          isNotCalled: {
-            color: {
-              background: 'lime'
-            }
-          },
-          doesNotCall: {
-            color: {
-              background: 'yellow'
-            }
-          },
-          noInteraction: {
-            color: {
-              background: 'red'
-            }
-          }
-        },
-        layout: {
-          hierarchical: {
-            // direction: "UD"
-            sortMethod: "directed"
-          }
-        }
+      else {
+        document.getElementById("network").innerHTML = "Could not get graph"
       }
-
-      var node;
-      for(var i=0; node = nodes[i]; i++) {
-        while(node !== undefined && node.group === 'noInteraction') {
-          nodes.splice(i, 1);
-          node = nodes[i];
-        }
-      }
-
-      var network = new vis.Network(container, data, options);
-      showStatus("Showing Graph");
-      */
     }
-    reader.readAsText(files[0]);
   }
+  request.open("GET", "http://localhost:8000/progress/jsonGraph", true)
+  request.send()
 }
 
-dragDropWidget.createWidget("filedrag", showGraph);
+function showGraph(graphText) {
+  var container = document.getElementById("network")
+  container.innerHTML = "Showing graph"
+  var graph = JSON.parse(graphText)
+  options = {
+    nodes: {
+      shape: 'dot',
+      size: 10
+    },
+    physics: false
+  }
+  var network = new vis.Network(container, graph, options);
+  network.clusterByHubsize(3, options)
+}
+
+document.getElementById("show-network").onclick = getGraph;

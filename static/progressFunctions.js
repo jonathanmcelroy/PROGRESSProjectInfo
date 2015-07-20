@@ -26,7 +26,7 @@ function inString(index, contents) {
 
 function getVariables(contents) {
   var regex = /define\s+variable\s+([\w-]+)/gi;
-  
+
   // TODO: this can be done functionally
   var vars = [];
   var result;
@@ -39,7 +39,7 @@ function getVariables(contents) {
 
 function getGlobalVariables(contents) {
   var regex = /^define\s+variable\s+([\w-]+)/gmi;
-  
+
   // TODO: this can be done functionally
   var vars = [];
   var result;
@@ -55,7 +55,7 @@ function getGlobalVariables(contents) {
 
 function getGlobalTempTables(contents) {
   var regex = /^define\s+temp-table\s+([\w-]+)/gmi;
-  
+
   // TODO: this can be done functionally
   var vars = [];
   var result;
@@ -64,7 +64,6 @@ function getGlobalTempTables(contents) {
       name: result[1],
       index: regex.lastIndex
     });
-
   }
   return vars;
 }
@@ -80,7 +79,7 @@ function getEventDefinitions(contents) {
     eventEnd.lastIndex = startIndex;
     eventEnd.exec(contents);
     var endIndex = eventEnd.lastIndex;
-    
+
     events.push({
       eventName: result[2],
       object: result[2],
@@ -95,7 +94,7 @@ function getEventDefinitions(contents) {
 function getProcedureDefinitions(contents) {
   var procedureStart = /procedure +([\w-]+) +[.:]/gi;
   var procedureEnd   = /end procedure\./gi;
-  
+
   var procedures = [];
   var result;
   while((result = procedureStart.exec(contents)) !== null) {
@@ -103,7 +102,7 @@ function getProcedureDefinitions(contents) {
     procedureEnd.lastIndex = startIndex;
     procedureEnd.exec(contents);
     var endIndex = procedureEnd.lastIndex;
-    
+
     procedures.push({
       name:   result[1],
       start:  startIndex,
@@ -116,7 +115,7 @@ function getProcedureDefinitions(contents) {
 function getFunctionDefinitions(contents) {
   var functionStart = /function +([\w-]+) +returns +[\w-]+\s*\([^)]*\) *:/gi;
   var functionEnd   = /end function\./gi;
-  
+
   var functions = [];
   var result;
   while((result = functionStart.exec(contents)) !== null) {
@@ -124,7 +123,7 @@ function getFunctionDefinitions(contents) {
     functionEnd.lastIndex = startIndex;
     functionEnd.exec(contents);
     var endIndex = functionEnd.lastIndex;
-    
+
     functions.push({
       name:   result[1],
       start:  startIndex,
@@ -141,7 +140,7 @@ function getVariableUses(variable, contents) {
   while((result = regex.exec(contents)) !== null) {
     indices.push(regex.lastIndex);
   }
-  return indices; 
+  return indices;
 }
 
 function getVariableAssignments(variable, contents) {
@@ -151,7 +150,7 @@ function getVariableAssignments(variable, contents) {
   while((result = regex.exec(contents)) !== null) {
     indices.push(regex.lastIndex);
   }
-  return indices; 
+  return indices;
 }
 
 function getTempTableUses(tempTable, contents) {
@@ -161,7 +160,7 @@ function getTempTableUses(tempTable, contents) {
   while((result = regex.exec(contents)) !== null) {
     indices.push(regex.lastIndex);
   }
-  return indices; 
+  return indices;
 }
 
 function getTempTableAssignments(tempTable, contents) {
@@ -171,13 +170,13 @@ function getTempTableAssignments(tempTable, contents) {
   while((result = regex.exec(contents)) !== null) {
     indices.push(regex.lastIndex);
   }
-  return indices; 
+  return indices;
 }
 
 
 function getProcedureCalls(contents) {
   var regex = /run +([\w-]+)/gi
-  
+
   var procedures = [];
   var result;
   while((result = regex.exec(contents)) !== null) {
@@ -239,7 +238,7 @@ function getAllUnusedOrUndefinedVariables(contents) {
 module.exports.getVariables                     = getVariables;
 module.exports.getGlobalVariables               = getGlobalVariables;
 module.exports.getGlobalTempTables               = getGlobalTempTables;
-module.exports.getEventDefinitions              = getEventDefinitions; 
+module.exports.getEventDefinitions              = getEventDefinitions;
 module.exports.getProcedureDefinitions          = getProcedureDefinitions;
 module.exports.getFunctionDefinitions           = getFunctionDefinitions;
 
