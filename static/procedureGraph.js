@@ -161,8 +161,10 @@ function showGraph(files) {
       var node = {
         id:     variable.name,
         label:  variable.name,
-        group:  'variable'
-
+        group:  'variable',
+      }
+      if (variable.type && variable.type.toLowerCase() == "handle") {
+        node.group = 'handle'
       }
       nodeDict[variable.name] = node;
       nodesArray.push(node);
@@ -230,6 +232,11 @@ function showGraph(files) {
         variable: {
           color: {
             background: 'purple'
+          }
+        },
+        handle: {
+          color: {
+            background: 'brown'
           }
         },
         tempTable: {

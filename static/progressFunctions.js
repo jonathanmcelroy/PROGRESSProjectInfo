@@ -38,7 +38,7 @@ function getVariables(contents) {
 
 
 function getGlobalVariables(contents) {
-  var regex = /^define\s+variable\s+([\w-]+)/gmi;
+  var regex = /^define\s+variable\s+([\w#$%&_-]+)(?:\s+as\s+([\w#$%&_-]+))?/gmi;
 
   // TODO: this can be done functionally
   var vars = [];
@@ -46,9 +46,9 @@ function getGlobalVariables(contents) {
   while((result = regex.exec(contents)) !== null) {
     vars.push({
       name: result[1],
-      index: regex.lastIndex
+      index: regex.lastIndex,
+      type: result[2]
     });
-
   }
   return vars;
 }
