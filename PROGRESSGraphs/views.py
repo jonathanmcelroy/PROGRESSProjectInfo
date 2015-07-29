@@ -15,6 +15,7 @@ def fileGraph(request):
 def procedureGraph(request):
     return render(request, 'procedureGraph.html', {})
 
+
 def jsonGraph(request):
     return HttpResponse(json.dumps({
         'nodes': [{
@@ -26,3 +27,11 @@ def jsonGraph(request):
             'to':   edge.used.name,
         } for edge in Edge.objects.all()],
     }), content_type="application/json")
+
+def jsonNodeName(request):
+    name = request.GET.get('name', '')
+    nodes = Node.objects.filter(name__contains = name)[:5]
+    print(nodes)
+    return HttpResponse(json.dumps([
+        node.name for node in nodes
+    ]), content_type="application/json")

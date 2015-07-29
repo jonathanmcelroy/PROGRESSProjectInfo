@@ -1,11 +1,21 @@
 {% load static %}
 <!-- <meta http-equiv="content-type" content="text/html; charset=utf-8" /> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="{% static 'node_modules/vis/dist/vis.js' %}"></script>
-<link rel="stylesheet" href="{% static 'procedureGraph.css' %}"></link>
+<link rel="stylesheet" href="{% static 'style.css' %}"></link>
 <link rel="stylesheet" href="{% static 'node_modules/vis/dist/vis.css' %}"></link>
 
 <div id="content">
-  <button id="show-network">Show graph</button>
+  <div id="info" class="left">
+    <h3>All</h3>
+    <button id="show-network">Show graph</button>
+  </div>
+  <div id="selector" class="right">
+    <form action="{% url 'jsonNodeName' %}">
+      <input class="row"></input>
+    </form>
+    <div id="results"></div>
+  </div>
   <div id="network"></div>
 </div>
 <script src="{% static 'fileGraph.js' %}"></script>
